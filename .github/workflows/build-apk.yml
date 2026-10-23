@@ -4,26 +4,16 @@ name: Build Bhumika APK
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Bhumika
         uses: actions/checkout@v4
-
-      - name: Check project files
-        run: |
-          echo "Checking Bhumika project..."
-          ls -la
-
-      - name: Check for Android Gradle project
-        run: |
-          if [ ! -f "gradlew" ]; then
-            echo "Android Gradle project not found."
-            echo "This website-only repository needs an Android wrapper first."
-            exit 1
-          fi
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -31,14 +21,119 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Build debug APK
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Create Android project
+        shell: bash
         run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          mkdir -p app/src/main/java/com/bhumika/app
+          mkdir -p app/src/main/assets
+
+          cp index.html app/src/main/assets/index.html
+          cp manifest.json app/src/main/assets/manifest.json
+          cp sw.js app/src/main/assets/sw.js
+          cp icon-192.png app/src/main/assets/icon-192.png
+          cp icon-512.png app/src/main/assets/icon-512.png
+
+          cat > settings.gradle <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          rootProject.name = "Bhumika"
+          include(":app")
+          EOF
+
+          cat > build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.7.3' apply false
+          }
+          EOF
+
+          cat > app/build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application'
+          }
+          android {
+              namespace 'com.bhumika.app'
+              compileSdk 35
+
+              defaultConfig {
+                  applicationId 'com.bhumika.app'
+                  minSdk 23
+                  targetSdk 28
+                  versionCode 1
+                  versionName '1.0'
+              }
+          }
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <application
+                  android:theme="@android:style/Theme.Material.Light.NoActionBar"
+                  android:label="Bhumika"
+                  android:usesCleartextTraffic="false">
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/com/bhumika/app/MainActivity.java <<'EOF'
+          package com.bhumika.app;
+
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+
+          public class MainActivity extends Activity {
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  WebView web = new WebView(this);
+                  web.setWebViewClient(new WebViewClient());
+                  web.getSettings().setJavaScriptEnabled(true);
+                  web.loadUrl("file:///android_asset/index.html");
+                  setContentView(web);
+              }
+
+              @Override
+              public void onBackPressed() {
+                  setContentView(new WebView(this));
+                  super.onBackPressed();
+              }
+          }
+          EOF
+
+      - name: Build APK
+        run: gradle --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: bhumika-debug-apk
-          path: "**/build/outputs/apk/debug/*.apk"
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
           
