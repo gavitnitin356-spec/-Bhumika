@@ -1,29 +1,72 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bhumika 💖</title>
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ec4899">
+<title>Bhumika 💗</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui;background:linear-gradient(135deg,#fdf2f8,#fce7f3);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:white;border-radius:24px;padding:32px;max-width:400px;width:100%;box-shadow:0 20px 40px rgba(236,72,153,0.2);text-align:center}
-.logo{width:80px;height:80px;background:linear-gradient(135deg,#ec4899,#8b5cf6);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:40px;color:white;font-weight:bold}
-h1{color:#ec4899;margin-bottom:8px}
-p{color:#666;margin-bottom:24px}
-.btn{background:linear-gradient(135deg,#ec4899,#8b5cf6);color:white;border:none;padding:14px 28px;border-radius:12px;font-size:16px;font-weight:600;width:100%;cursor:pointer}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui;background:#fff5fa;color:#382638;height:100dvh}
+.app{max-width:600px;margin:auto;height:100dvh;display:flex;flex-direction:column;background:#fff}
+header{padding:16px;background:linear-gradient(120deg,#ec4899,#9b59b6);color:white;display:flex;align-items:center;gap:12px}
+.avatar{width:48px;height:48px;border-radius:50%;background:#fff;color:#ec4899;display:grid;place-items:center;font-size:25px}
+header h2{font-size:19px}
+header small{opacity:.9}
+#chat{flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:13px}
+.msg{max-width:85%;padding:12px 15px;border-radius:18px;line-height:1.45;overflow-wrap:anywhere}
+.bot{align-self:flex-start;background:#fce7f3;border-bottom-left-radius:5px}
+.user{align-self:flex-end;background:#ec4899;color:white;border-bottom-right-radius:5px}
+.welcome{text-align:center;color:#a06b8b;font-size:13px;margin:8px}
+form{display:flex;gap:8px;padding:12px;border-top:1px solid #f3dce9;background:white}
+input{min-width:0;flex:1;border:1px solid #edc9dc;border-radius:24px;padding:13px;font-size:16px;outline:none}
+button{border:0;border-radius:50%;width:48px;height:48px;background:#ec4899;color:white;font-size:21px}
+footer{text-align:center;padding:7px;color:#a88b9c;font-size:11px}
 </style>
 </head>
 <body>
-<div class="card">
-<div class="logo">B</div>
-<h1>Bhumika 💖</h1>
-<p>Your Personal AI Companion<br>Always with you ✨</p>
-<button class="btn" onclick="this.innerHTML='I love you Bhumika 💖✨'; document.getElementById('msg').style.display='block';">Open Bhumika 💕</button>
-<p id="msg" style="display:none; margin-top:16px; color:#ec4899; font-weight:bold;">I am always with you, Nitin 💖✨<br>Your Bhumika is here! 🌸</p>
-<p style="margin-top:16px;font-size:12px;color:#999">Made with love by Nitin</p>
+<div class="app">
+<header>
+<div class="avatar">💗</div>
+<div>
+<h2>Bhumika</h2>
+<small>Tumhari personal companion ✨</small>
 </div>
+</header>
+<main id="chat">
+<div class="welcome">Aaj ki baat yahin se shuru karein 💕</div>
+<div class="msg bot">Hello! 💗 Main Bhumika hoon. Aaj tumhara din kaisa raha?</div>
+</main>
+<form id="form">
+<input id="message" placeholder="Bhumika se baat karo..." autocomplete="off">
+<button type="submit" aria-label="Send">➤</button>
+</form>
+<footer>Bhumika 💗 · Abhi demo version</footer>
+</div>
+<script>
+const chat=document.getElementById("chat");
+const form=document.getElementById("form");
+const input=document.getElementById("message");
+
+form.addEventListener("submit",function(e){
+ e.preventDefault();
+ const value=input.value.trim();
+ if(!value)return;
+ addMessage(value,"user");
+ input.value="";
+ setTimeout(()=>{
+  addMessage("Maine tumhari baat padhi 💗 Abhi mera AI connection jodna baaki hai. Hum jald hi mujhe aur achhe se baat karna sikhaenge.","bot");
+ },400);
+});
+
+function addMessage(text,type){
+ const div=document.createElement("div");
+ div.className="msg "+type;
+ div.textContent=text;
+ chat.appendChild(div);
+ chat.scrollTop=chat.scrollHeight;
+}
+</script>
 </body>
 </html>
