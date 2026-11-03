@@ -61,10 +61,10 @@
       const loadingDiv = addMessage("Soch rahi hoon... 💭", "bot");
 
       try {
-        const res = await fetch(BACKEND_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ message: value })
+        const fullUrl = BACKEND_URL + "?message=" + encodeURIComponent(value);
+        const res = await fetch(fullUrl, {
+          method: "GET",
+          mode: "cors"
         });
         const data = await res.json();
         loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya, phir se bolo na!";
@@ -83,5 +83,4 @@
     }
   </script>
 </body>
-                            </html>
-                            
+</html>
