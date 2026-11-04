@@ -6,22 +6,22 @@
   <meta name="theme-color" content="#ec4899">
   <title>Bhumika 💖</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:system-ui;background:#fff5fa;color:#382638;height:100dvh}
-    .app{max-width:600px;margin:auto;height:100dvh;display:flex;flex-direction:column;background:#fff}
-    header{padding:16px;background:linear-gradient(120deg,#ec4899,#9b59b6);color:white;display:flex;align-items:center;gap:12px}
-    .avatar{width:48px;height:48px;border-radius:50%;background:#fff;color:#ec4899;display:grid;place-items:center;font-size:24px}
-    header h2{font-size:19px}
-    header small{opacity:.9}
-    #chat{flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:13px}
-    .msg{max-width:85%;padding:12px 15px;border-radius:18px;line-height:1.45;overflow-wrap:anywhere}
-    .bot{align-self:flex-start;background:#fce7f3;border-bottom-left-radius:5px}
-    .user{align-self:flex-end;background:#ec4899;color:white;border-bottom-right-radius:5px}
-    .welcome{text-align:center;color:#a06b8b;font-size:13px;margin:8px}
-    form{display:flex;gap:8px;padding:12px;border-top:1px solid #f3dce9;background:white}
-    input{min-width:0;flex:1;border:1px solid #edc9dc;border-radius:24px;padding:13px;font-size:16px;outline:none}
-    button{border:0;border-radius:50%;width:48px;height:48px;background:#ec4899;color:white;font-size:21px;cursor:pointer}
-    footer{text-align:center;padding:7px;color:#a08b9c;font-size:11px}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #fff5fa; color: #333; }
+    .app { max-width: 600px; margin: auto; height: 100dvh; display: flex; flex-direction: column; background: #fff; }
+    header { padding: 16px; background: linear-gradient(120deg, #ec4899, #f43f5e); color: #fff; display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 24px; }
+    header h2 { font-size: 19px; }
+    header small { opacity: .9; }
+    main { flex: 1; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 12px; }
+    .msg { max-width: 85%; padding: 12px 15px; border-radius: 18px; line-height: 1.4; word-break: break-word; font-size: 15px; }
+    .bot { align-self: flex-start; background: #fce7f3; border-bottom-left-radius: 4px; color: #831843; }
+    .user { align-self: flex-end; background: #ec4899; color: #fff; border-bottom-right-radius: 4px; }
+    .welcome { text-align: center; color: #a06b8b; font-size: 14px; margin: 10px 0; }
+    form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #fbcfe8; background: #fff; }
+    input { min-width: 0; flex: 1; border: 1px solid #edc9dc; border-radius: 24px; padding: 12px 18px; outline: none; font-size: 16px; }
+    button { border: 0; border-radius: 50%; width: 48px; height: 48px; background: #ec4899; color: #fff; font-size: 18px; cursor: pointer; }
+    footer { text-align: center; padding: 7px; color: #a08b9c; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -33,19 +33,21 @@
         <small>Tumhari personal companion ✨</small>
       </div>
     </header>
+
     <main id="chat">
-      <div class="welcome">Aaj ki baat yahin se shuru karein 💕</div>
-      <div class="msg bot">Hello! 💖 Main Bhumika hoon. Aaj tumhara din kaisa raha?</div>
+      <div class="welcome">Aaj ki baat yahin se shuru karte hain!</div>
+      <div class="msg bot">Hello! 💖 Main Bhumika hoon. Kaho, aaj ka din kaisa raha?</div>
     </main>
+
     <form id="form">
-      <input id="message" placeholder="Bhumika se baat karo..." autocomplete="off">
+      <input id="message" placeholder="Bhumika se baat karo..." autocomplete="off" />
       <button type="submit" aria-label="Send">➤</button>
     </form>
     <footer>Bhumika 💖</footer>
   </div>
 
   <script>
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwvnQ5KzkI4Owr7Q-SOUuyfDVjBQvtLg-AvgGfWT1qGw6dk-Obzyyq_iU6-MCVzvYVN/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxbURmrlkOtNXv7fiiVCmnQZ_vCxKUHU6Yp6IvCOR3Bfc-VZkrtWIP6WyVL3TphOtW4m2/exec";
     const chat = document.getElementById("chat");
     const form = document.getElementById("form");
     const input = document.getElementById("message");
@@ -58,7 +60,7 @@
       addMessage(value, "user");
       input.value = "";
 
-      const loadingDiv = addMessage("Soch rahi hoon... 💭", "bot");
+      const loadingDiv = addMessage("Soch rahi hoon...", "bot");
 
       try {
         const fullUrl = BACKEND_URL + "?message=" + encodeURIComponent(value);
@@ -67,7 +69,7 @@
           mode: "cors"
         });
         const data = await res.json();
-        loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya, phir se bolo na!";
+        loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya!";
       } catch (err) {
         loadingDiv.textContent = "Baat nahi ho paayi, ek baar internet check kar lo! 🥺";
       }
