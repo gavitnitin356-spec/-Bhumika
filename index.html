@@ -64,7 +64,10 @@
 
       try {
         const fullUrl = BACKEND_URL + "?message=" + encodeURIComponent(value);
-        const res = await fetch(fullUrl);
+        const res = await fetch(fullUrl, {
+          method: "GET",
+          redirect: "follow"
+        });
         const data = await res.json();
         loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya!";
       } catch (err) {
