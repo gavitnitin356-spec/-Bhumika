@@ -64,14 +64,19 @@
 
       try {
         const fullUrl = BACKEND_URL + "?message=" + encodeURIComponent(value);
-        const res = await fetch(fullUrl, {
-          method: "GET",
-          redirect: "follow"
-        });
-        const data = await res.json();
-        loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya!";
+        // Direct text fetch without strict json parse block
+        const res = await fetch(fullUrl);
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya!";
+        } catch(e) {
+          loadingDiv.textContent = text || "Kuch samajh nahi aaya!";
+        }
       } catch (err) {
-        loadingDiv.textContent = "Baat nahi ho paayi, ek baar internet check kar lo! 🥺";
+        // Fallback agar CORS abhi bhi block kare
+        window.open(BACKEND_URL + "?message=" + encodeURIComponent(value), "_blank");
+        loadingDiv.textContent = "Ek baar upar allow permission check kar lo!";
       }
     });
 
