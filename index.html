@@ -47,7 +47,7 @@
   </div>
 
   <script>
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxbURmrlkOtNXv7fiiVCmnQZ_vCxKUHU6Yp6IvCOR3Bfc-VZkrtWIP6WyVL3TphOtW4m2/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxbURmrlkOtNXv7RiVCmnQZ_vCxKUHU6Yp6IvCOR38fc-VZktWlP6WyVL3TphOtW4m2/exec";
     const chat = document.getElementById("chat");
     const form = document.getElementById("form");
     const input = document.getElementById("message");
@@ -64,19 +64,14 @@
 
       try {
         const fullUrl = BACKEND_URL + "?message=" + encodeURIComponent(value);
-        // Direct text fetch without strict json parse block
-        const res = await fetch(fullUrl);
-        const text = await res.text();
-        try {
-          const data = JSON.parse(text);
-          loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya!";
-        } catch(e) {
-          loadingDiv.textContent = text || "Kuch samajh nahi aaya!";
-        }
+        const res = await fetch(fullUrl, {
+          method: "GET",
+          redirect: "follow"
+        });
+        const data = await res.json();
+        loadingDiv.textContent = data.reply || "Kuch samajh nahi aaya!";
       } catch (err) {
-        // Fallback agar CORS abhi bhi block kare
-        window.open(BACKEND_URL + "?message=" + encodeURIComponent(value), "_blank");
-        loadingDiv.textContent = "Ek baar upar allow permission check kar lo!";
+        loadingDiv.textContent = "Baat nahi ho paayi, ek baar internet check kar lo! 🥺";
       }
     });
 
@@ -91,3 +86,4 @@
   </script>
 </body>
 </html>
+
