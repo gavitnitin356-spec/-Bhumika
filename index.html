@@ -62,9 +62,9 @@
 
       const loadingDiv = addMessage("Soch rahi hoon...", "bot");
 
-      // 15 seconds automatic timeout
+      // 35 seconds automatic timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(),35000 );
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
 
       try {
         const fullUrl = BACKEND_URL + "?message=" + encodeURIComponent(value);
